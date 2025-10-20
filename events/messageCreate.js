@@ -1,23 +1,24 @@
+// events/messageCreate.js
 const { addXP } = require('../utils/xpManager');
+const { getConfig } = require('../utils/config');
 
 module.exports = {
     name: 'messageCreate',
     async execute(message, client) {
         if (message.author.bot || !message.guild) return;
 
-        const prefix = process.env.PREFIX;
+        const prefix = getConfig('prefix'); // pega do config.json
+        const defaultXP = getConfig('defaultXP'); // XP por mensagem
         const isCommand = message.content.startsWith(prefix);
 
-        // Ganha XP apenas por mensagens normais
         if (!isCommand) {
-            const { leveledUp, newLevel } = addXP(message.guild.id, message.author.id, 10);
+            const { leveledUp, newLevel } = addXP(message.guild.id, message.author.id, defaultXP);
             if (leveledUp) {
                 await message.channel.send(`🎉 **${message.author.username}** subiu para o **nível ${newLevel}!** Parabéns! 🥳`);
             }
             return;
         }
 
-        // Processa comandos
         const args = message.content.slice(prefix.length).trim().split(/ +/);
         const commandName = args.shift().toLowerCase();
         const command = client.commands.get(commandName);

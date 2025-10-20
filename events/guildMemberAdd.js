@@ -1,3 +1,4 @@
+// events/guildMemberAdd.js
 const { title } = require('process');
 const { EmbedBuilder } = require('../utils/embedBuilder');
 

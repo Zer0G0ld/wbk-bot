@@ -1,69 +1,151 @@
-# wbk-bot
+# WBK Bot
 
-## Linguagens
-Node.js
+Um bot para Discord focado em **gamificação e engajamento de membros**, com sistema de XP, ranking, comandos de interação e mensagens automáticas de boas-vindas. Criado com Node.js e Discord.js, o WBK Bot é modular e escalável, ideal para comunidades que querem incentivar participação ativa.
 
-## Bibliotecas
-discord.js
-dotenv
-sqlite
-moment.js
-node-cron
+---
 
-## Funcionalidades mínimas
-1. XP automático por mensagem
-- Cada mensagem gera XP
-- XP aleatório ou fico
-- Evitar spam (cooldown por usuário)
+## 🔹 Funcionalidades principais
 
-2. Level up
-- Cada nível precisa de uma quantidade de XP (ex.: Level x 100)
-- Mensagem automática quando o jogador sobe de nível
+* Sistema de **XP** por atividade no servidor
+* **Ranking** de membros mais ativos
+* Comandos básicos: `$help`, `$ping`, `$xp`, `$ranking`
+* Mensagens automáticas de boas-vindas e eventos
+* Estrutura modular para fácil expansão
 
-3. Ranking / Leaderboard
-- !rank → mostra nível e XP do usuário
-- !top10 → lista os 10 jogadores com mais XP
+---
 
-4. Roles automáticas
-- R1, R2, R3 (ou apenas R3, se decidir)
-- Adiciona role quando o jogador atinge o nível necessário
+## 🔹 Tecnologias usadas
 
-5. Mensagens de boas-vindas
-- Pode incluir XP bônus inicial
-- Link para regras, canais importantes
+* [Node.js](https://nodejs.org/)
+* [Discord.js v15](https://discord.js.org)
+* Arquivos JSON como banco local (`database/xp.json`)
+* Modularização por **comandos**, **eventos** e **utilitários**
 
-## Funcionalidades avançadas
-- XP bônus por eventos, rally, doações na aliança
-- Logs de XP e níveis em um canal específico (#logs-xp)
-- Integração com comandos de equipe (ex.: !guild-stats)
-- Dashboard web para ver rankings e estatísticas
+---
 
-## Estrutura do projeto
+## 🔹 Estrutura do projeto
+
+```text
+wbk-bot/
+├── assets/             # Imagens e arquivos do bot
+├── commands/           # Comandos do bot (XP, ranking, help, ping, etc.)
+├── config/             # Configurações do bot (prefixo, roles)
+├── database/           # Banco de dados local (XP, schemas)
+├── events/             # Eventos do Discord (messageCreate, guildMemberAdd, etc.)
+├── utils/              # Funções utilitárias (XP, embeds, logger)
+├── docs/               # Documentação detalhada dos módulos
+├── index.js            # Arquivo principal do bot
+├── package.json
+└── README.md
+```
+
+> Para documentação detalhada de cada módulo e explicações sobre a estrutura, veja [docs/MODULES.md](./docs/MODULES.md)
+
+---
+
+## 🔹 Como usar
+
+1. Clone o projeto:
 
 ```bash
-WBK-Bot/
-│
-├─ index.js               # Entrada principal do bot
-├─ config/
-│   ├─ config.json        # Configurações globais (prefixo, cores, XP, roles)
-│   └─ roles.json         # Mapping de roles (R1, R2, R3)
-├─ commands/              # Comandos do bot
-│   ├─ rank.js            # Mostra rank do usuário
-│   ├─ top10.js           # Mostra leaderboard
-│   ├─ help.js            # Lista comandos
-│   └─ xp.js              # Ajusta XP manualmente (admin)
-├─ events/                # Eventos do Discord
-│   ├─ messageCreate.js   # Mensagens (para XP)
-│   ├─ guildMemberAdd.js  # Boas-vindas
-│   └─ ready.js           # Quando o bot inicializa
-├─ database/              # Banco de dados
-│   ├─ db.js              # Conexão com SQLite ou MongoDB
-│   └─ schema.sql         # Estrutura inicial do DB
-├─ utils/                 # Funções auxiliares
-│   ├─ xpManager.js       # Gerenciamento de XP e levels
-│   ├─ roleManager.js     # Gerenciamento automático de roles
-│   ├─ embedBuilder.js    # Criação de embeds personalizados
-│   └─ logger.js          # Logs do bot
-├─ assets/                # Emojis, imagens, gifs, ícones
-└─ .env                   # Token do bot, configs sensíveis
+git clone https://github.com/Zer0G0ld/wbk-bot.git
 ```
+
+2. Instale as dependências:
+
+```bash
+npm install
+```
+
+3. Configure seu `.env`:
+
+> Exemplo disponível em `.env.example`
+
+```
+DISCORD_TOKEN=SEU_TOKEN
+PREFIX=$
+```
+
+4. Inicie o bot:
+
+```bash
+node index.js
+```
+
+ou se preferir 
+
+```bash
+npm start
+```
+
+---
+
+## 🔹 Estrutura de modularização
+
+O WBK Bot é organizado em:
+
+* **Commands**: Cada comando (`xp.js`, `ranking.js`, `help.js`, etc.) é isolado, facilitando a adição de novos comandos.
+* **Events**: Captura eventos do Discord, como mensagens, entrada e saída de membros, etc.
+* **Utils**: Funções auxiliares como `xpManager.js` (XP e nível), `embedBuilder.js` (embeds padronizados), `logger.js`.
+* **Database**: Armazena dados persistentes do servidor localmente em JSON, permitindo backup e manipulação fácil.
+
+---
+
+## Diagramas
+
+```mermaid
+flowchart TD
+    A[Discord.js Evento: messageCreate] --> B[Mensagem]
+    B --> C[xpManager.js: addXP \n mensagem normal]
+    B --> D[commands/*.js: execute \n comando]
+    C --> E{LeveledUp?}
+    D --> E
+    E --> F[embedBuilder: cria embed]
+    F --> G[message.reply: envia resposta]
+```
+
+```text
+                  ┌───────────────┐
+                  │  Discord.js   │
+                  │  Evento:      │
+                  │ messageCreate │
+                  └───────┬───────┘
+                          │
+         ┌────────────────┴───────────────┐
+         │                                │
+   Mensagem normal                   Comando detectado
+         │                                │
+ ┌───────┴────────┐               ┌───────┴────────┐
+ │ xpManager.js   │               │ commands/*.js  │
+ │ addXP()        │               │ execute()      │
+ │ getLevel()     │               │ getXP()/utils  │
+ └───────┬────────┘               └───────┬────────┘
+         │                                │
+         │                                │
+         └─────────┐            ┌─────────┘
+                   │            │
+               Verifica leveledUp
+                   │
+             ┌─────┴─────┐
+             │ embedBuilder│
+             │ Cria embed │
+             └─────┬─────┘
+                   │
+             ┌─────┴─────┐
+             │message.reply│
+             │  Envia     │
+             └────────────┘
+```
+
+---
+
+## 🔹 Contribuição
+
+Contribuições são bem-vindas!
+Basta criar uma branch para sua feature ou correção, commitar e abrir um Pull Request.
+
+---
+
+## 🔹 Licença
+
+[GPL-3.0 License](LICENSE) © WBK Bot

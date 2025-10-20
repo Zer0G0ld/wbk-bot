@@ -1,3 +1,4 @@
+// events/guildMemberRemove.js
 module.exports = {
   name: 'guildMemberRemove',
   execute(member, client) {

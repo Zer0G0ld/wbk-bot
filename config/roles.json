@@ -1,0 +1,7 @@
+{
+  "admin": "COLE_AQUI_O_ID_DA_ROLE_ADMIN",
+  "mod": "COLE_AQUI_O_ID_DA_ROLE_MOD",
+  "member": "COLE_AQUI_O_ID_DA_ROLE_MEMBER",
+  "muted": "COLE_AQUI_O_ID_DA_ROLE_MUTED",
+  "bot": "COLE_AQUI_O_ID_DA_ROLE_DO_BOT"
+}

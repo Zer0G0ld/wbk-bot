@@ -1,0 +1,15 @@
+{
+  "prefix": "$",
+  "defaultXP": 10,
+  "embedColors": {
+    "xp": 65280,
+    "ranking": 16763904,
+    "help": 32767,
+    "welcome": 65280
+  },
+  "welcomeMessage": "Prepare-se para o WBK! Leia #rules e escolha seu cargo em #roles.",
+  "levels": {
+    "baseXP": 100,
+    "formula": "quadratica" 
+  }
+}
