@@ -20,8 +20,10 @@
   },
   "homepage": "https://github.com/Zer0G0ld/wbk-bot#readme",
   "dependencies": {
+    "@vitalets/google-translate-api": "^9.2.1",
     "discord.js": "^14.23.2",
     "dotenv": "^17.2.3",
+    "node-cache": "^5.1.2",
     "sqlite3": "^5.1.7"
   }
 }
